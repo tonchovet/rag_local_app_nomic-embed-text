@@ -1,0 +1,114 @@
+🧠 Asistente RAG Local con IA (Ollama + Flutter + Python)
+
+Una aplicación de Chat con tus Documentos (RAG) que se ejecuta 100% localmente para máxima privacidad y velocidad.
+
+📋 Descripción
+
+Este proyecto implementa un sistema de Generación Aumentada por Recuperación (RAG) completamente local. Permite a los usuarios "chatear" con sus propios documentos (PDF, TXT, DOCX) sin que la información salga de su computadora.
+
+A diferencia de las soluciones en la nube, esta arquitectura garantiza privacidad total y costo cero de operación, utilizando modelos Open Source de última generación orquestados por Ollama.
+
+🏗️ Arquitectura del Sistema
+
+El sistema sigue una arquitectura cliente-servidor desacoplada para optimizar el rendimiento:
+
+graph LR
+    User[Usuario (Flutter App)] <-->API[Backend (FastAPI)]
+    API <--> Logic[LangChain Orchestrator]
+    Logic <--> VDB[(ChromaDB - Vector Store)]
+    Logic <--> Embed[Nomic-Embed-Text (Embeddings)]
+    Logic <--> LLM[Llama 3 (Inferencia)]
+
+
+🚀 Decisiones Técnicas Destacadas
+
+Modelo de Embeddings Especializado (nomic-embed-text):
+
+En lugar de usar un LLM pesado para leer documentos, se utiliza este modelo optimizado que es 20x más rápido en la ingestión de datos y ofrece mejor recuperación semántica.
+
+Inferencia con Llama 3:
+
+Utilizado estrictamente para la generación de respuestas finales, aprovechando su capacidad de razonamiento.
+
+Persistencia Vectorial (ChromaDB):
+
+La base de datos vectorial se persiste en disco, evitando tener que re-procesar los documentos cada vez que se reinicia el servidor.
+
+Backend Asíncrono (FastAPI):
+
+Manejo eficiente de múltiples solicitudes y tiempos de espera largos típicos de la IA.
+
+🛠️ Stack Tecnológico
+
+IA & LLMs: Ollama, Llama 3, Nomic-Embed-Text.
+
+Orquestación: LangChain, LangChain-Core (LCEL).
+
+Backend: Python, FastAPI, Uvicorn.
+
+Base de Datos Vectorial: ChromaDB (Local).
+
+Frontend: Flutter (Dart), Material Design 3.
+
+Procesamiento de Archivos: PyPDF, Python-Docx.
+
+📦 Instalación y Configuración
+
+Prerrequisitos
+
+Ollama: Debe estar instalado y ejecutándose. Descargar Ollama.
+
+Python 3.10+
+
+Flutter SDK
+
+Paso 1: Configurar Modelos de IA
+
+El sistema descargará los modelos automáticamente al iniciar el backend, pero puedes hacerlo manualmente para ahorrar tiempo:
+
+ollama pull llama3
+ollama pull nomic-embed-text
+
+
+Paso 2: Iniciar el Backend
+
+Navega a la carpeta backend y ejecuta el script de arranque automático (detecta OS y configura entorno virtual):
+
+Windows: Doble click en run_backend.bat
+
+Linux/Mac: Ejecutar ./run_backend.sh
+
+El servidor iniciará en http://127.0.0.1:8000.
+
+Paso 3: Iniciar la App (Frontend)
+
+En una nueva terminal:
+
+cd frontend
+flutter pub get
+flutter run
+
+
+🎮 Guía de Uso
+
+Configuración: Abre el panel de configuración (icono de engranaje) en la app.
+
+Ingestión: Pega la ruta local de tu carpeta de documentos (ej: C:\MisDocumentos\Tesis) y presiona "Cargar".
+
+El sistema procesará los archivos a alta velocidad usando el modelo Nomic.
+
+Chat: Cierra la configuración y empieza a preguntar sobre tus archivos.
+
+La IA citará las fuentes utilizadas para cada respuesta.
+
+🔮 Futuras Mejoras
+
+Soporte para imágenes y OCR.
+
+Historial de conversaciones persistente (SQLite).
+
+Selección de modelos dinámica desde la UI.
+
+Modo "Resumen" para documentos largos.
+
+Autor: Alberto Ghibaudo Otero
